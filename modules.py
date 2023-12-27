@@ -39,18 +39,18 @@ def extract_speaker_audio(diarization, speaker_label):
     return speaker_audio
 
 
-# Function to reduce volume of one speaker during overlap
-def reduce_overlap_volume(speaker_1_audio, speaker_2_audio):
-    overlap = speaker_1_audio.overlay(speaker_2_audio)
+# Function to reduce power of one speaker in the voice of another
+def reduce_power(speaker_0_audio, speaker_1_audio, reduction_factor=0.5):
+    # Ensure both audio segments have the same length
+    min_length = min(len(speaker_0_audio), len(speaker_1_audio))
+    speaker_0_audio = speaker_0_audio[:min_length]
+    speaker_1_audio = speaker_1_audio[:min_length]
 
-    # Reduce the volume of the second speaker during the overlap
-    reduced_speaker_2 = overlap - speaker_2_audio
+    # Reduce the power of Speaker 1 in the voice of Speaker 0
+    reduced_speaker_1 = speaker_1_audio - (speaker_1_audio * reduction_factor)
 
-    # Remove the original volume of the second speaker during the overlap
-    cleaned_audio = speaker_1_audio - overlap
-
-    # Combine the reduced volume speaker and cleaned audio
-    final_audio = cleaned_audio + reduced_speaker_2
+    # Combine the audio of both speakers
+    final_audio = speaker_0_audio + reduced_speaker_1
 
     return final_audio
 
@@ -66,8 +66,8 @@ speaker_00_audio.export("./results/speaker_00_audio.mp3", format="mp3")
 speaker_01_audio = extract_speaker_audio(diarization, "SPEAKER_01")
 speaker_01_audio.export("./results/speaker_01_audio.mp3", format="mp3")
 
-# Reduce volume during overlap
-final_audio = reduce_overlap_volume(speaker_00_audio, speaker_01_audio)
+# Reduce power of Speaker 1 in the voice of Speaker 0
+final_audio = reduce_power(speaker_00_audio, speaker_01_audio, reduction_factor=0.5)
 
 # Export the final audio
-final_audio.export("results/final_audio.mp3", format="mp3")
+final_audio.export("final_audio.mp3", format="mp3")
