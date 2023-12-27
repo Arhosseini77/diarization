@@ -6,15 +6,14 @@ pipeline = Pipeline.from_pretrained(
     "pyannote/speaker-diarization-3.1",
     use_auth_token="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")
 
-# # apply pretrained pipeline
-# diarization = pipeline("/content/voice_27-12-2023_09-22-26.mp3")
-#
-#
-# pipeline.to(torch.device("cuda"))
-#
-# # print the result
-# for turn, _, speaker in diarization.itertracks(yield_label=True):
-#     print(f"start={turn.start:.1f}s stop={turn.end:.1f}s speaker_{speaker}")
+pipeline.to(torch.device("cuda"))
+
+# apply pretrained pipeline
+diarization = pipeline("test_files/arh_zahra.mp3")
+
+# print the result
+for turn, _, speaker in diarization.itertracks(yield_label=True):
+    print(f"start={turn.start:.1f}s stop={turn.end:.1f}s speaker_{speaker}")
 #
 #
 # # Assuming 'audio_file' is the path to your original audio file
