@@ -46,14 +46,13 @@ def reduce_power(speaker_0_audio, speaker_1_audio, reduction_factor=0.5):
     speaker_0_audio = speaker_0_audio[:min_length]
     speaker_1_audio = speaker_1_audio[:min_length]
 
-    # Reduce the power of Speaker 1 in the voice of Speaker 0
-    reduced_speaker_1 = speaker_1_audio - (speaker_1_audio * reduction_factor)
+    # Apply gain reduction to Speaker 1 audio
+    reduced_speaker_1 = speaker_1_audio.apply_gain(-20 * reduction_factor)  # -20 * log10(reduction_factor)
 
     # Combine the audio of both speakers
     final_audio = speaker_0_audio + reduced_speaker_1
 
     return final_audio
-
 # Load the original audio file
 audio = AudioSegment.from_file(audio_file)
 
