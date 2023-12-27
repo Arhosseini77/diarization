@@ -1,3 +1,4 @@
+import os
 import torch
 from pyannote.audio import Pipeline
 from pydub import AudioSegment
@@ -18,6 +19,8 @@ diarization = pipeline(audio_file)
 for turn, _, speaker in diarization.itertracks(yield_label=True):
     print(f"start={turn.start:.1f}s stop={turn.end:.1f}s speaker_{speaker}")
 
+# create results directory
+os.makedirs("./results", exist_ok=True)
 
 # Function to extract speaker audio segments
 def extract_speaker_audio(diarization, speaker_label):
@@ -38,8 +41,8 @@ def extract_speaker_audio(diarization, speaker_label):
 
 # Extract audio for speaker 00
 speaker_00_audio = extract_speaker_audio(diarization, "SPEAKER_00")
-speaker_00_audio.export("speaker_00_audio.mp3", format="mp3")
+speaker_00_audio.export("./results/speaker_00_audio.mp3", format="mp3")
 
 # Extract audio for speaker 01
 speaker_01_audio = extract_speaker_audio(diarization, "SPEAKER_01")
-speaker_01_audio.export("speaker_01_audio.mp3", format="mp3")
+speaker_01_audio.export("./results/speaker_01_audio.mp3", format="mp3")
